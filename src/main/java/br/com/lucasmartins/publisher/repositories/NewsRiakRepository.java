@@ -24,7 +24,8 @@ public class NewsRiakRepository {
     }
 
     public void fetch(String externalId) throws Exception {
-        RiakClient client = new RiakClient(configuration.setUpCluster());
+        // RiakClient client = new RiakClient(configuration.setUpCluster());
+        RiakClient client = configuration.setUpClient();
         
         Namespace quotesBucket = new Namespace("news");
 
@@ -43,7 +44,8 @@ public class NewsRiakRepository {
     }
 
     public void store(News news) throws Exception {
-        RiakClient client = new RiakClient(configuration.setUpCluster());
+        // RiakClient client = new RiakClient(configuration.setUpCluster());
+        RiakClient client = configuration.setUpClient();
 
         RiakObject quoteObject = new RiakObject()
             // We tell Riak that we're storing plaintext, not JSON, HTML, etc.

@@ -2,6 +2,7 @@ package br.com.lucasmartins.publisher.config;
 
 import java.net.UnknownHostException;
 
+import com.basho.riak.client.api.RiakClient;
 import com.basho.riak.client.core.RiakCluster;
 import com.basho.riak.client.core.RiakNode;
 
@@ -25,6 +26,8 @@ public class RiakConfiguration {
                 .withRemotePort(remotePort)
                 .build();
 
+        RiakClient client = RiakClient.newClient(remoteAddress);
+
         // This cluster object takes our one node as an argument
         RiakCluster cluster = new RiakCluster.Builder(node)
                 .build();
@@ -33,6 +36,25 @@ public class RiakConfiguration {
         cluster.start();
 
         return cluster;
+    }
+
+    public RiakClient setUpClient() throws UnknownHostException {
+        // // This example will use only one node listening on localhost:10017
+        // RiakNode node = new RiakNode.Builder()
+        //         .withRemoteAddress(remoteAddress)
+        //         .withRemotePort(remotePort)
+        //         .build();
+
+        RiakClient client = RiakClient.newClient(remoteAddress);
+
+        // // This cluster object takes our one node as an argument
+        // RiakCluster cluster = new RiakCluster.Builder(node)
+        //         .build();
+
+        // // The cluster must be started to work, otherwise you will see errors
+        // cluster.start();
+
+        return client;
     }
 
 }

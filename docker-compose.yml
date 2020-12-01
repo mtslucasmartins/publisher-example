@@ -1,37 +1,61 @@
 version: "3.0"
 
 services:
+  riak-coordinator:
+   image: basho/riak-kv #:ubuntu-2.2.3
+   hostname: riak-coordinator
+   container_name: riak-coordinator-blog-dev
+   restart: unless-stopped
+   ports:
+     - "8098:8098"
+   environment:
+     - CLUSTER_NAME=riakkv
+   volumes:
+     - riak_schemas:/etc/riak/schemas
 
-  coordinator:
-    image: basho/riak-kv
-    ports:
-      # - "8087"
-      - "8098"
-    environment:
-      - CLUSTER_NAME=riakkv
-    labels:
-      - "com.basho.riak.cluster.name=riak-kv"
-    volumes:
-      - "~/docker-volumes/schemas:/etc/riak/schemas"
-    networks:
-      - default
+  riak-member: # you can scale it
+   image: basho/riak-kv #:ubuntu-2.2.3
+   restart: unless-stopped
+   ports:
+     - "8098"
+   links:
+     - riak-coordinator
+   depends_on:
+     - riak-coordinator
+   environment:
+     - CLUSTER_NAME=riakkv
+     - COORDINATOR_NODE=riak-coordinator
 
-  member:
-    image: basho/riak-kv
-    ports:
-      # - "8877:8087"
-      - "8899:8098"
-    labels:
-      - "com.basho.riak.cluster.name=riak-kv"
-    links:
-      - coordinator
-    networks:
-      - default
-    depends_on:
-      - coordinator
-    environment:
-      - CLUSTER_NAME=riakkv
-      - COORDINATOR_NODE=coordinator
+  # coordinator:
+  #   image: basho/riak-kv
+  #   ports:
+  #     # - "8087"
+  #     - "8098"
+  #   environment:
+  #     - CLUSTER_NAME=riakkv
+  #   labels:
+  #     - "com.basho.riak.cluster.name=riak-kv"
+  #   volumes:
+  #     - "~/docker-volumes/schemas:/etc/riak/schemas"
+  #   networks:
+  #     - default
+
+  # member:
+  #   image: basho/riak-kv
+  #   ports:
+  #     # - "8877:8087"
+  #     - "8899:8098"
+  #   labels:
+  #     - "com.basho.riak.cluster.name=riak-kv"
+  #   links:
+  #     - coordinator
+  #   networks:
+  #     - default
+  #   depends_on:
+  #     - coordinator
+  #   environment:
+  #     - CLUSTER_NAME=riakkv
+  #     - COORDINATOR_NODE=coordinator
 
   db:
     image: postgres
@@ -50,7 +74,7 @@ services:
       dockerfile: Dockerfile/
     depends_on:
       - db
-      - member
+      - riak-coordinator
     env_file:
       - .env
     ports:
@@ -64,4 +88,6 @@ networks:
   default: null
 
 volumes:
+  riak_schemas:
+    external: false
   schemas: {}
