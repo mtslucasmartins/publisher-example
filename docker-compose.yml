@@ -1,0 +1,67 @@
+version: "3.0"
+
+services:
+
+  coordinator:
+    image: basho/riak-kv
+    ports:
+      # - "8087"
+      - "8098"
+    environment:
+      - CLUSTER_NAME=riakkv
+    labels:
+      - "com.basho.riak.cluster.name=riak-kv"
+    volumes:
+      - "~/docker-volumes/schemas:/etc/riak/schemas"
+    networks:
+      - default
+
+  member:
+    image: basho/riak-kv
+    ports:
+      # - "8877:8087"
+      - "8899:8098"
+    labels:
+      - "com.basho.riak.cluster.name=riak-kv"
+    links:
+      - coordinator
+    networks:
+      - default
+    depends_on:
+      - coordinator
+    environment:
+      - CLUSTER_NAME=riakkv
+      - COORDINATOR_NODE=coordinator
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=passwd
+      - POSTGRES_USER=rafael
+      - POSTGRES_DB=bd_app
+    ports:
+      - "5432:5432"
+    networks:
+      - default
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile/
+    depends_on:
+      - db
+      - member
+    env_file:
+      - .env
+    ports:
+      - "9091:9092"
+    networks:
+      - default
+    volumes:
+      - "~/docker-volumes/appdata:/var/lib/data:rw"
+    
+networks:
+  default: null
+
+volumes:
+  schemas: {}

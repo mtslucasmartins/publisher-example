@@ -1,0 +1,34 @@
+server:
+  port: ${PORT:9090}
+
+  servlet:
+    context-path: /
+
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/bd_app
+    username: rafael
+    password: passwd
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    # 'spring.jpa.open-in-view' is enabled by default. 
+    # Therefore, database queries may be performed during view rendering. 
+    # Explicitly configure spring.jpa.open-in-view to disable this warning
+    open-in-view: false 
+
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: ${HIBERNATE_SHOW_SQL:false}
+    properties:
+      hibernate:
+        generate_statistics: ${HIBERNATE_STATISTICS:false}
+        temp:
+          use_jdbc_metadata_defaults: false
+
+# RIAK 
+riak:
+  remote-address: member
+  remote-port: 8098
