@@ -30,5 +30,5 @@ spring:
 
 # RIAK 
 riak:
-  remote-address: member
+  remote-address: riak-coordinator
   remote-port: 8098

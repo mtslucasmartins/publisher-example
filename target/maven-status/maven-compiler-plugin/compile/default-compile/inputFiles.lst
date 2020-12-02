@@ -1,7 +1,0 @@
-/home/peo_lmartins/sandbox/spring-publisher-example/src/main/java/br/com/lucasmartins/publisher/domain/models/News.java
-/home/peo_lmartins/sandbox/spring-publisher-example/src/main/java/br/com/lucasmartins/publisher/services/NewsService.java
-/home/peo_lmartins/sandbox/spring-publisher-example/src/main/java/br/com/lucasmartins/publisher/controllers/NewsController.java
-/home/peo_lmartins/sandbox/spring-publisher-example/src/main/java/br/com/lucasmartins/publisher/services/dwr/IndexDwrService.java
-/home/peo_lmartins/sandbox/spring-publisher-example/src/main/java/br/com/lucasmartins/publisher/config/DwrConfiguration.java
-/home/peo_lmartins/sandbox/spring-publisher-example/src/main/java/br/com/lucasmartins/publisher/controllers/IndexController.java
-/home/peo_lmartins/sandbox/spring-publisher-example/src/main/java/br/com/lucasmartins/publisher/PublisherApplication.java

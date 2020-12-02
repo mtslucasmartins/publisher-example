@@ -23,7 +23,7 @@ public class IndexDwrService {
 
     @RemoteMethod
     public List<NewsDTO> listNews() throws Exception {
-        return this.newsService.list();
+        return this.newsService.listAllNews();
     }
 
     @RemoteMethod
@@ -31,41 +31,4 @@ public class IndexDwrService {
         return this.newsService.findByExternalId(externalId);
     }
 
-    // private List<NewsDTO> fakenews() throws Exception {
-    //     //
-    //     List<NewsDTO> news = new ArrayList<NewsDTO>();
-
-    //     String body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ac nibh urna. Vivamus iaculis at felis id fringilla. Aliquam sit amet imperdiet odio. Fusce diam tortor, suscipit in pulvinar quis, gravida sed nulla.";
-
-    //     NewsDTO n1 = new NewsDTO();
-    //     n1.setAuthor("Alice Cunha");
-    //     n1.setTitle("Blogueiro terraplanista é abduzido por extraterrestres em forró rala-coxa");
-    //     n1.setBody(body);
-
-    //     NewsDTO n2 = new NewsDTO();
-    //     n2.setAuthor("André Ricardo");
-    //     n2.setTitle("Boneco de posto cartomante trafica órgãos ao vivo na TV ");
-    //     n2.setBody(body);
-
-    //     NewsDTO n3 = new NewsDTO();
-    //     n3.setAuthor("Marcelo Fernandes");
-    //     n3.setTitle("Ministro astrólogo toca tambor com Ronaldinho Gaúcho na orla carioca");
-    //     n3.setBody(body);
-
-    //     NewsDTO n4 = new NewsDTO();
-    //     n4.setAuthor("João Vasconcellos");
-    //     n4.setTitle("Juiz vestido de palhaço é preso em flagrante no Senado");
-    //     n4.setBody(body);
-        
-    //     //
-    //     news.addAll(this.newsService.list());
-
-    //     news.add(n1);
-    //     news.add(n2);
-    //     news.add(n3);
-    //     news.add(n4);
-
-    //     return news;
-    // }
- 
 }
