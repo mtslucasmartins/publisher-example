@@ -31,18 +31,18 @@ public class NewsController {
     }
 
     @GetMapping("/publicar")
-    public String publish(@PathVariable("externalId") String externalId, Model model) {
+    public String publish(Model model) {
         return "noticias/publicar-noticia.html";
     }
 
     @PostMapping("/publicar")
     // TODO: save as a file and save to riak 
-    public String publish(@RequestBody NewsDTO newsDTO) throws Exception {
+    public String publish(@ModelAttribute NewsDTO newsDTO) throws Exception {
         try {
             newsDTO = newsService.publish(newsDTO);
             return "redirect:/noticias/" + newsDTO.getExternalId();
         } catch (Exception ex) {
-            return "noticias/publicar-noticia.html";
+            return "noticias/noticias.html";
         }
     }
 
@@ -71,7 +71,7 @@ public class NewsController {
     public String edit(@PathVariable("externalId") String externalId, @ModelAttribute NewsDTO newsDTO, Model model) {
         try {
             newsDTO = newsService.update(externalId, newsDTO);
-            return "redirect:/noticias/" + newsDTO.getExternalId();
+            return "redirect:/noticias/" + externalId;
         } catch (Exception ex) {
             return "noticias/editar-noticia.html";
         }

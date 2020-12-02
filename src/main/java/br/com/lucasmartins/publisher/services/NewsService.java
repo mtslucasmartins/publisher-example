@@ -11,28 +11,29 @@ import org.springframework.stereotype.Service;
 import br.com.lucasmartins.publisher.domain.dtos.NewsDTO;
 import br.com.lucasmartins.publisher.domain.mappers.NewsMapper;
 import br.com.lucasmartins.publisher.domain.models.News;
-import br.com.lucasmartins.publisher.repositories.NewsRepository;
 import br.com.lucasmartins.publisher.repositories.NewsRiakRepository;
 
 @Service
 public class NewsService {
 
-    private NewsRepository newsRepository;
     private NewsRiakRepository newsRiakRepository;
+    private FileSystemService nfsService;
 
     @Autowired
-    public NewsService(NewsRepository newsRepository, NewsRiakRepository newsRiakRepository) {
-        this.newsRepository = newsRepository;
+    public NewsService(
+                       NewsRiakRepository newsRiakRepository,
+                       FileSystemService nfsService) {
         this.newsRiakRepository = newsRiakRepository;
+        this.nfsService = nfsService;
     }
 
-    public List<NewsDTO> list() throws Exception {
-        return newsRepository.findAll() 
+    public List<NewsDTO> listAllNews() throws Exception {
+        return newsRiakRepository.fetch() 
                     .stream().map(NewsMapper::fromEntity).collect(Collectors.toList());
     }
 
-    public NewsDTO findByExternalId(String externalId) throws Exception {
-        return NewsMapper.fromEntity(newsRepository.findByExternalId(externalId));
+    public NewsDTO findByExternalId(String key) throws Exception {
+        return NewsMapper.fromEntity(newsRiakRepository.findByKey(key));
     }
 
     public NewsDTO publish(NewsDTO newsDTO) throws Exception {
@@ -43,25 +44,29 @@ public class NewsService {
         news.setExternalId(generateFilename(news.getTitle()));
 
         newsRiakRepository.store(news);
+        nfsService.upsert(news);
 
-        return NewsMapper.fromEntity(newsRepository.save(news));
+        return NewsMapper.fromEntity(news);
     }
 
-    public NewsDTO update(String externalId, NewsDTO newsDTO) throws Exception {
-        News news = newsRepository.findByExternalId(externalId);
+    public NewsDTO update(String key, NewsDTO newsDTO) throws Exception {
+        News news = newsRiakRepository.findByKey(key);
 
         news.setId(UUID.fromString(newsDTO.getId()));
         news.setAuthor(newsDTO.getAuthor());
         news.setTitle(newsDTO.getTitle());
         news.setBody(newsDTO.getBody());
+        news.setExternalId(key);
 
-        return NewsMapper.fromEntity(newsRepository.save(news));
+        newsRiakRepository.store(news);
+        nfsService.upsert(news);
+
+        return NewsMapper.fromEntity(news);
     }
 
-    public boolean delete(String externalId) throws Exception {
-        News news = newsRepository.findByExternalId(externalId);
-
-        newsRepository.deleteById(news.getId());
+    public boolean delete(String key) throws Exception {
+        newsRiakRepository.deleteByKey(key);
+        nfsService.delete(key);
     
         return true;
     }

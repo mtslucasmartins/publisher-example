@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-public class NFSService {
+public class FileSystemService {
 
     private static final String PATH = "/var/lib/data";
 
@@ -27,6 +27,16 @@ public class NFSService {
             ObjectMapper mapper = new ObjectMapper();
 
             mapper.writeValue(new File(filename), news);
+        } catch (Exception ex) {
+            log.warn("Something went wrong while serializing object to file system!");
+        }
+    }
+
+    public void delete(String key) {
+        try {
+            String filename = MessageFormat.format("{0}/{1}.json", PATH, key);
+
+            new File(filename).delete();
         } catch (Exception ex) {
             log.warn("Something went wrong while serializing object to file system!");
         }

@@ -70,10 +70,10 @@
             <label for="news-body">Corpo</label>
             <textarea id="news-body" name="body" class="form-control" rows="3"></textarea>
           </div>
-          <button class="btn btn-primary" type="submit">
+          <!-- <button class="btn btn-primary" type="submit">
             Salvar
           </button>
-          
+           -->
         </form>
         <button id="btn-save" class="btn btn-primary" type="button">
           Salvar
@@ -118,6 +118,15 @@
     document.getElementById('btn-delete').addEventListener('click', () => {
       let form = new FormData(document.querySelector('#form-news-publisher'));
       post(window.location.pathname.replace('editar', 'excluir'), form);
+    });
+
+    document.getElementById('btn-save').addEventListener('click', () => {
+      let form = new FormData(document.querySelector('#form-news-publisher'));
+      let params = {};
+      for (let key of form.keys()) {
+        params[key] = form.get(key);
+      }
+      post(window.location.pathname, params);
     });
 
     IndexDwrService.findByExternalId(externalId, (data) => {
